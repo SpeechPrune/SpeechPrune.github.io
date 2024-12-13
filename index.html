@@ -296,9 +296,54 @@
     vertical-align: middle;
     text-align: center;
   }
+
+  /* Add these styles */
+  .results-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+  }
+
+  .results-table th,
+  .results-table td {
+    border: 1px solid #000;
+    padding: 8px;
+    text-align: center;
+  }
+
+  .results-table th {
+    background-color: #f2f2f2;
+    font-weight: normal;
+  }
+
+  .results-table tr:first-child th {
+    border-top: 2px solid #000;
+  }
+
+  .results-table tr:last-child td {
+    border-bottom: 2px solid #000; /* Adds a solid bottom border for the last row */
+  }  
+
+  .results-table tr:last-of-type td {
+    border-bottom: 2px solid #000; /* Ensures the last row always has a solid bottom border */
+  }
+
+  .method-cell {
+    text-align: left !important;
+    padding-left: 15px !important;
+  }
+
+  .bold-result {
+    font-weight: bold;
+    text-decoration: underline solid black;
+  }
+
+  /* Add specific styling for "Ours" */
+  .method-cell:contains("Ours") {
+    font-weight: bold;
+  }
 </style>
-<table>
-  <caption>Comparison of different audio pruning methods across various metrics. PR: Pruning Rate, TF: TFLOPS, PT: Prefill time (ms), TM: Total memory (GB), SA: Storing activation (GB), RAP: Random Audio Pruning, RAC: Random Audio Cropping.</caption>
+<table class="results-table">
   <thead>
     <tr>
       <th>Method</th>
@@ -338,7 +383,7 @@
       <td>48.13%</td>
     </tr>
     <tr>
-      <td class="method-cell">Ours</td>
+      <td class="method-cell"><b>Ours</b></td>
       <td class="bold-result">89.23%</td>
       <td class="bold-result">81.64%</td>
     </tr>
@@ -358,7 +403,7 @@
       <td>41.90%</td>
     </tr>
     <tr>
-      <td class="method-cell">Ours</td>
+      <td class="method-cell"><b>Ours</b></td>
       <td class="bold-result">85.97%</td>
       <td class="bold-result">76.43%</td>
     </tr>
@@ -378,17 +423,17 @@
       <td>35.41%</td>
     </tr>
     <tr>
-      <td class="method-cell">Ours</td>
+      <td class="method-cell"><b>Ours</b></td>
       <td class="bold-result">75.89%</td>
       <td class="bold-result">63.77%</td>
     </tr>
     <tr>
       <td class="method-cell">RAP</td>
-      <td rowspan="3">0.8</td>
-      <td rowspan="3">3.66</td>
-      <td rowspan="3">278</td>
-      <td rowspan="3">13.09</td>
-      <td rowspan="3">0.04</td>
+      <td rowspan="3" style="border-bottom: 2px solid #000;">0.8</td>
+      <td rowspan="3" style="border-bottom: 2px solid #000;">3.66</td>
+      <td rowspan="3" style="border-bottom: 2px solid #000;">278</td>
+      <td rowspan="3" style="border-bottom: 2px solid #000;">13.09</td>
+      <td rowspan="3" style="border-bottom: 2px solid #000;">0.04</td>
       <td>45.26%</td>
       <td>23.19%</td>
     </tr>
@@ -398,9 +443,9 @@
       <td>33.67%</td>
     </tr>
     <tr>
-      <td class="method-cell">Ours</td>
-      <td class="bold-result">62.45%</td>
-      <td class="bold-result">46.15%</td>
+      <td class="method-cell" style="border-bottom: 2px solid #000;"><b>Ours</b></td>
+      <td class="bold-result" style="border-bottom: 2px solid #000;">62.45%</td>
+      <td class="bold-result" style="border-bottom: 2px solid #000;">46.15%</td>
     </tr>
   </tbody>
 </table>
