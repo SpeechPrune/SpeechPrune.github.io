@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="SpeechPrune: Context-aware Token Pruning for Speech Information Retrieval">
+  <meta name="keywords" content="SpeechPrune">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SpeechPrune: Context-aware Token Pruning for Speech Information Retrieval</title>
+
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+
+<body>
+
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+    <div class="navbar-menu">
+      <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+        <a class="navbar-item" href="">
+          <span class="icon">
+            <i class="fas fa-home"></i>
+          </span>
+        </a>
+
+        <!-- <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://hypernerf.github.io">
+            HyperNeRF
+          </a>
+          <a class="navbar-item" href="https://nerfies.github.io">
+            Nerfies
+          </a>
+          <a class="navbar-item" href="https://latentfusion.github.io">
+            LatentFusion
+          </a>
+          <a class="navbar-item" href="https://photoshape.github.io">
+            PhotoShape
+          </a>
+        </div>
+      </div> -->
+      </div>
+
+    </div>
+  </nav>
+
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title" style="width: 100vw;">SpeechPrune: Context-aware Token Pruning for Speech Information Retrieval</h1>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">Yueqian Lin<sup>1*</sup>, Yuzhe Fu<sup>1*</sup>, Jingyang Zhang<sup>1</sup>,Yudong Liu<sup>1</sup>
+              <br>
+              <span class="author-block">Jianyi Zhang<sup>1</sup>, Jingwei Sun<sup>1</sup>, Hai "Helen" Li<sup>1</sup>, Yiran Chen<sup>1</sup></span>
+              <br>
+              <span class="author-block"><sup>*</sup>Equal Contribution</span>
+              <br>
+              <span class="author-block"><sup>1</sup>Duke University</span>
+              <br>
+              
+            </div>
+            <!-- code will be available once published -->
+            <div class="column has-text-centered">
+              <span class="link-block">
+            </div>
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <span class="link-block">
+                  <a href="#" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                    </span>
+                    <span>Paper</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="https://github.com/linyueqian/SPIRAL_Dataset" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--!Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="#ffffff" d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3 .3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5 .3-6.2 2.3zm44.2-1.7c-2.9 .7-4.9 2.6-4.6 4.9 .3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3 .7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3 .3 2.9 2.3 3.9 1.6 1 3.6 .7 4.3-.7 .7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3 .7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3 .7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+                    </span>
+                    <span>Dataset</span>
+                  </a>
+                </span>
+              </div>
+            </div>
+            <!-- 
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <span class="link-block">
+                <a href="https://arxiv.org/pdf/2011.12948"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2011.12948"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://www.youtube.com/watch?v=MrKrnHhk8IA"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://github.com/google/nerfies"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+              <span class="link-block">
+                <a href="https://github.com/google/nerfies/releases/tag/0.1"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Data</span>
+                  </a>
+            </div>
+               -->
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              We introduce Speech Information Retrieval (<b>SIR</b>), a
+              new long-context task for Speech Large Language Models (Speech
+              LLMs), and present <b>SPIRAL</b>, a 1,012-sample benchmark testing
+              models' ability to extract critical details from approximately
+              90-second spoken inputs. While current Speech LLMs excel
+              at short-form tasks, they struggle with the computational and
+              representational demands of longer audio sequences. To address
+              this limitation, we propose <b>SpeechPrune</b>, a training-free token
+              pruning strategy that uses speech-text similarity and approximated
+              attention scores to efficiently discard irrelevant tokens. In SPIRAL,
+              SpeechPrune achieves accuracy improvements of 29% and
+              up to 47% over the original model and the random pruning
+              model at a pruning rate of 20%, respectively. SpeechPrune can
+              maintain network performance even at a pruning level of 80%.
+              This approach highlights the potential of token-level pruning for
+              efficient and scalable long-form speech understanding.
+            </p>
+          </div>
+          <!-- table -->
+          <h2 class="title is-3">Method</h2>
+          <div class="content has-text-justified">
+            <p>
+              We propose a training-free token pruning strategy, SpeechPrune, that uses speech-text similarity and approximated attention scores to efficiently prune irrelevant tokens.
+            </p>
+          </div>
+          <!-- figure -->
+          <figure class="image">
+            <img src="./static/img/method.png" alt="Method">
+          </figure>
+        </div>
+      </div>
+  </section>
+  <section class="hero is-light is-small">
+    <div class="hero-body">
+      <div class="container hero-body is-max-desktop">
+        <h2 class="title is-3">Results</h2>
+        <div class="content has-text-justified">
+          <p>
+            We evaluate the performance of SpeechPrune on the SPIRAL dataset. The main results are shown below.
+          </p>
+<style>
+  table td[rowspan] {
+    vertical-align: middle;
+  }
+  .bold-result {
+    font-weight: bold;
+  }
+  .method-cell {
+    text-align: left;
+  }
+  table td {
+    text-align: center;
+  }
+  table th {
+    text-align: center;
+  }
+  caption {
+    caption-side: bottom;
+    padding: 10px 0;
+    font-style: italic;
+  }
+  .transcript-container {
+    max-height: 200px;  /* Adjust this value as needed */
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    text-align: left;  /* Left align the text */
+  }
+
+  /* Make only tbody rows consistent height and vertically center content */
+  .table tbody tr {
+    height: 250px;  /* Adjust this value based on your needs */
+  }
+
+  .table tbody td {
+    vertical-align: middle !important;  /* Force vertical centering */
+  }
+
+  /* Keep the transcript text left-aligned */
+  .transcript-text {
+    text-align: left;
+  }
+
+  /* Optional: Customize scrollbar appearance */
+  .transcript-container::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .transcript-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  .transcript-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+  }
+
+  .transcript-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  /* Ensure header row is not affected by tbody styles */
+  .table thead tr {
+    height: auto;  /* Ensure header row height is not fixed */
+  }
+
+  .table thead th {
+    vertical-align: middle;
+    text-align: center;
+  }
+</style>
+<table>
+  <caption>Comparison of different audio pruning methods across various metrics. PR: Pruning Rate, TF: TFLOPS, PT: Prefill time (ms), TM: Total memory (GB), SA: Storing activation (GB), RAP: Random Audio Pruning, RAC: Random Audio Cropping.</caption>
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>PR</th>
+      <th>TF ↓</th>
+      <th>PT ↓</th>
+      <th>TM ↓</th>
+      <th>SA ↓</th>
+      <th>SPIRAL ↑</th>
+      <th>SPIRAL-H ↑</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="method-cell">Original</td>
+      <td>-</td>
+      <td>12.2</td>
+      <td>779</td>
+      <td>13.40</td>
+      <td>0.19</td>
+      <td>60.38%</td>
+      <td>0%</td>
+    </tr>
+    <tr>
+      <td class="method-cell">RAP</td>
+      <td rowspan="3">0.2</td>
+      <td rowspan="3">10.06</td>
+      <td rowspan="3">662</td>
+      <td rowspan="3">13.32</td>
+      <td rowspan="3">0.15</td>
+      <td>42.49%</td>
+      <td>21.45%</td>
+    </tr>
+    <tr>
+      <td class="method-cell">RAC</td>
+      <td>65.71%</td>
+      <td>48.13%</td>
+    </tr>
+    <tr>
+      <td class="method-cell">Ours</td>
+      <td class="bold-result">89.23%</td>
+      <td class="bold-result">81.64%</td>
+    </tr>
+    <tr>
+      <td class="method-cell">RAP</td>
+      <td rowspan="3">0.4</td>
+      <td rowspan="3">7.93</td>
+      <td rowspan="3">511</td>
+      <td rowspan="3">13.24</td>
+      <td rowspan="3">0.11</td>
+      <td>42.89%</td>
+      <td>22.19%</td>
+    </tr>
+    <tr>
+      <td class="method-cell">RAC</td>
+      <td>62.45%</td>
+      <td>41.90%</td>
+    </tr>
+    <tr>
+      <td class="method-cell">Ours</td>
+      <td class="bold-result">85.97%</td>
+      <td class="bold-result">76.43%</td>
+    </tr>
+    <tr>
+      <td class="method-cell">RAP</td>
+      <td rowspan="3">0.6</td>
+      <td rowspan="3">5.79</td>
+      <td rowspan="3">419</td>
+      <td rowspan="3">13.17</td>
+      <td rowspan="3">0.07</td>
+      <td>42.39%</td>
+      <td>21.45%</td>
+    </tr>
+    <tr>
+      <td class="method-cell">RAC</td>
+      <td>58.20%</td>
+      <td>35.41%</td>
+    </tr>
+    <tr>
+      <td class="method-cell">Ours</td>
+      <td class="bold-result">75.89%</td>
+      <td class="bold-result">63.77%</td>
+    </tr>
+    <tr>
+      <td class="method-cell">RAP</td>
+      <td rowspan="3">0.8</td>
+      <td rowspan="3">3.66</td>
+      <td rowspan="3">278</td>
+      <td rowspan="3">13.09</td>
+      <td rowspan="3">0.04</td>
+      <td>45.26%</td>
+      <td>23.19%</td>
+    </tr>
+    <tr>
+      <td class="method-cell">RAC</td>
+      <td>55.83%</td>
+      <td>33.67%</td>
+    </tr>
+    <tr>
+      <td class="method-cell">Ours</td>
+      <td class="bold-result">62.45%</td>
+      <td class="bold-result">46.15%</td>
+    </tr>
+  </tbody>
+</table>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="content">
+        <h2 class="title is-3">Samples from SPIRAL</h2>
+
+        <p class="title is-5">
+          <span style="background-color: #4CAF50; color: white; padding: 0.2em 0.6em; border-radius: 0.2em;">Example Entry 1 - Single-Speaker Lecture</span>
+        </p>
+        <table class="table is-fullwidth" style="table-layout: fixed; text-align: center;">
+          <thead>
+            <tr style="height: auto !important;">
+              <th style="padding: 10px;">metadata</th>
+              <th style="padding: 10px;">audio sample</th>
+              <th style="padding: 10px;">transcript</th>
+              <th style="padding: 10px;"><span style="background-color:#00AC94; color:#fff; padding: 5px; border-radius: 5px;">test question</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="vertical-align: top;">
+                main topic: "Performing Arts"<br>
+                subtopic: "Opera"<br>
+                transcript type: "lecture"<br>
+                id: "lecture_3"
+              </td>
+              <td class="audio-cell">
+                <audio controls style="width: 100%;">
+                  <source src="./static/audio/lecture_3.wav" type="audio/wav">
+                  Your browser does not support the audio element.
+                </audio>
+                <div style="margin-top: 10px; font-size: 0.9em; color: #666;">Full Audio</div>
+                <hr style="margin: 10px 0;">
+                <audio controls style="width: 100%;">
+                  <source src="./static/audio/lecture_3_spk_1_key.wav" type="audio/wav">
+                </audio>
+                <div style="margin-top: 10px; font-size: 0.9em; color: #666;">Key Sentence</div>
+              </td>
+              <td>
+                <div class="transcript-container">
+                  <div class="transcript-text">
+                    <span class="speaker-tag">spk_1:</span> "Opera, as we know, is a rich blend of music, drama, and visual arts, all coming together on one stage. It's fascinating to think about how it evolved over centuries. You might be familiar with the likes of Verdi and Wagner, but did you know that the world's longest opera lasts about 18 hours? That's Wagner's 'Der Ring des Nibelungen'. But let's dive into something a bit more recent and, uh, perhaps less known. <b>Just last month, an opera called 'The Arctic Light' premiered in Norway, and it featured a choir made up entirely of holograms.</b> This innovative approach not only saves on production costs but also allows for performances in places where it's logistically challenging to gather large numbers of singers. It's a fascinating time for opera, as technology begins to play a more significant role in how stories are told. Now, while traditionalists might resist these changes, many argue that they open up new possibilities for creative expression. And, um, it's this blend of history and modernity that makes opera such an exciting field within the performing arts today."
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div style="text-align: left;">
+                  Q: "What innovative feature did the opera 'The Arctic Light' showcase in its performance?"<br>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                    <div style="color: red;">A. A holographic choir</div>
+                    <div>B. A 24-hour performance</div>
+                    <div>C. A rotating stage</div>
+                    <div>D. An all-animal cast</div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <hr style="border-top: 1px solid #209cee;">
+        
+        <p class="title is-5">
+          <span style="background-color: #4CAF50; color: white; padding: 0.2em 0.6em; border-radius: 0.2em;">Example Entry 2 - Multi-Speaker Meeting</span>
+        </p>
+
+        <table class="table is-fullwidth" style="table-layout: fixed; text-align: center;">
+          <thead>
+            <tr style="height: auto !important;">
+              <th style="padding: 10px;">metadata</th>
+              <th style="padding: 10px;">audio sample</th>
+              <th style="padding: 10px;">transcript</th>
+              <th style="padding: 10px;"><span style="background-color:#00AC94; color:#fff; padding: 5px; border-radius: 5px;">test question</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="vertical-align: top;">
+                main topic: "Pharmaceutical"<br>
+                subtopic: "Pharmacovigilance"<br>
+                transcript type: "meeting"<br>
+                id: "meeting_3"
+              </td>
+              <td class="audio-cell">
+                <audio controls style="width: 100%;">
+                  <source src="./static/audio/meeting_3.wav" type="audio/wav">
+                  Your browser does not support the audio element.
+                </audio>
+                <div style="margin-top: 10px; font-size: 0.9em; color: #666;">Full Audio</div>
+                <hr style="margin: 10px 0;">
+                <audio controls style="width: 100%;">
+                  <source src="./static/audio/meeting_3_spk_1_key.wav" type="audio/wav">
+                </audio>
+                <div style="margin-top: 10px; font-size: 0.9em; color: #666;">Key Sentence</div>
+              </td>
+              <td>
+                <div class="transcript-container">
+                  <div class="transcript-text">
+                    <span class="speaker-tag">spk_1:</span> "Let's dive into today's topic on pharmacovigilance. I recently attended a conference where they mentioned that the FDA receives over two million adverse drug event reports each year."<br><br>
+                    <span class="speaker-tag">spk_2:</span> "That's a staggering number! But, how do they manage to analyze all those reports effectively? I mean, it must require a lot of resources and technology."<br><br>
+                    <span class="speaker-tag">spk_3:</span> "Exactly, and actually, they use a system called FAERS, the FDA Adverse Event Reporting System. It's crucial for signal detection and helps identify potential safety concerns."<br><br>
+                    <span class="speaker-tag">spk_4:</span> "Interesting. Did you know that just last month, they implemented a new AI tool to improve the accuracy of these analyses? It's supposed to significantly cut down processing time."<br><br>
+                    <span class="speaker-tag">spk_2:</span> "Oh, I wasn't aware of that. It's fascinating how AI is being integrated into healthcare. Does anyone know if it's shown any results yet?"<br><br>
+                    <span class="speaker-tag">spk_1:</span> "<b>Well, I spoke with someone from the FDA who mentioned that it's already reduced false positives by 15% since its implementation.</b> It's promising but still in the early stages."<br><br>
+                    <span class="speaker-tag">spk_3:</span> "That's promising indeed. It goes to show that technology is really transforming pharmacovigilance. We should definitely keep an eye on how this develops."<br><br>
+                    <span class="speaker-tag">spk_5:</span> "Absolutely, and it might be worth considering how we can incorporate similar tools in our processes. Staying updated with these advancements is key for us."
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div style="text-align: left;">
+                  Q: "What percentage reduction in false positives has the FDA's new AI tool achieved?"<br>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                    <div>A. 10%</div>
+                    <div style="color: red;">B. 15%</div>
+                    <div>C. 20%</div>
+                    <div>D. 25%</div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <hr style="border-top: 1px solid #209cee;">
+
+        <p class="title is-5">
+          <span style="background-color: #4CAF50; color: white; padding: 0.2em 0.6em; border-radius: 0.2em;">Example Entry 3 - Multi-Speaker Conversation</span>
+        </p>
+        <table class="table is-fullwidth" style="table-layout: fixed; text-align: center;">
+          <thead>
+            <tr style="height: auto !important;">
+              <th style="padding: 10px;">metadata</th>
+              <th style="padding: 10px;">audio sample</th>
+              <th style="padding: 10px;">transcript</th>
+              <th style="padding: 10px;"><span style="background-color:#00AC94; color:#fff; padding: 5px; border-radius: 5px;">test question</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="vertical-align: top;">
+                main topic: "Environment"<br>
+                subtopic: "Renewable Energy"<br>
+                transcript type: "conversation"<br>
+                id: "conversation_188"
+              </td>
+              <td class="audio-cell">
+                <audio controls style="width: 100%;">
+                  <source src="./static/audio/conversation_188.wav" type="audio/wav">
+                  Your browser does not support the audio element.
+                </audio>
+                <div style="margin-top: 10px; font-size: 0.9em; color: #666;">Full Audio</div>
+                <hr style="margin: 10px 0;">
+                <audio controls style="width: 100%;">
+                  <source src="./static/audio/conversation_188_spk_4_key.wav" type="audio/wav">
+                </audio>
+                <div style="margin-top: 10px; font-size: 0.9em; color: #666;">Key Sentence</div>
+              </td>
+              <td>
+                <div class="transcript-container">
+                  <div class="transcript-text">
+                    <span class="speaker-tag">spk_1:</span> "Did you hear about the new solar farm in Nevada? It's supposed to be one of the largest in the country."<br><br>
+                    <span class="speaker-tag">spk_2:</span> "Yeah, I read something about that. But I'm more interested in the offshore wind projects. They seem to be gaining traction lately."<br><br>
+                    <span class="speaker-tag">spk_1:</span> "Offshore wind is fascinating. I actually saw a report that said a single turbine can power up to 1,500 homes. That's pretty impressive."<br><br>
+                    <span class="speaker-tag">spk_3:</span> "Speaking of impressive, did you know that Iceland generates about 99% of its electricity from renewable sources? That's mainly geothermal and hydropower."<br><br>
+                    <span class="speaker-tag">spk_2:</span> "Iceland is a great example. But, let's not forget that not all countries have such resources. It's a bit more challenging for places without natural geothermal activity."<br><br>
+                    <span class="speaker-tag">spk_4:</span> "True, but innovation is key. <b>I met a researcher today who mentioned that in 2022, the cost of lithium-ion batteries dropped by 89% compared to a decade ago.</b> That could really boost the adoption of renewable energy."<br><br>
+                    <span class="speaker-tag">spk_1:</span> "That's an incredible drop! Lower battery costs can definitely make renewable energy more accessible and practical."<br><br>
+                    <span class="speaker-tag">spk_3:</span> "And it could also help with energy storage solutions. Storing energy efficiently is half the battle in renewable energy."<br><br>
+                    <span class="speaker-tag">spk_4:</span> "Exactly, and with improved storage, we can better manage supply and demand. It's exciting to see where this will lead us in the next few years."
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div style="text-align: left;">
+                  Q: "By what percentage did the cost of lithium-ion batteries drop in 2022 compared to a decade ago?"<br>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                    <div>A. 75%</div>
+                    <div style="color: red;">B. 89%</div>
+                    <div>C. 50%</div>
+                    <div>D. 30%</div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+        <!-- 
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{park2021nerfies,
+  author    = {Park, Keunhong and Sinha, Utkarsh and Barron, Jonathan T. and Bouaziz, Sofien and Goldman, Dan B and Seitz, Steven M. and Martin-Brualla, Ricardo},
+  title     = {Nerfies: Deformable Neural Radiance Fields},
+  journal   = {ICCV},
+  year      = {2021},
+}</code></pre>
+  </div>
+</section> -->
+
+
+        <footer class="footer">
+          <div class="container">
+            <!-- <div class="content has-text-centered">
+      <a class="icon-link"
+         href="./static/videos/nerfies_paper.pdf">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div> -->
+            <div class="columns is-centered">
+              <div class="column is-8">
+                <div class="content has-text-centered">
+                  <p>
+                    This website is licensed under a <a rel="license"
+                      href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+                      Commons Attribution-ShareAlike 4.0 International License</a>.
+                  </p>
+                  <p class="is-size-7">
+                    Template: <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </footer>
+
+</body>
+
+</html>
